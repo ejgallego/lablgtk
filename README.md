@@ -1,17 +1,18 @@
-
-             LablGTK3 3.0.beta5 : an interface to the GIMP Tool Kit
+# LablGTK3 3.0.beta5 : an interface to the GIMP Tool Kit
 
 Needed:
-        ocaml-4.05 or more
-        gtk+-3.18 or more
-        findlib 1.2.1 or more (for default install)
-        GNU make (there is no standard for conditionals)
+
+- ocaml >= 4.05.0
+- gtk+ >= 3.18
+- dune >= 1.4
 
 Info/upgrades:
-        http://lablgtk.forge.ocamlcore.org/
-        https://github.com/garrigue/lablgtk
 
-Status:
+- http://lablgtk.forge.ocamlcore.org/
+- https://github.com/garrigue/lablgtk
+
+## Status:
+
   LablGtk3 is still an experimental port of LablGtk2 to Gtk-3.
   Currently it is more or less a subset of LablGtk2.
 
@@ -32,57 +33,28 @@ Status:
   For unsupported methods, the error message is a bit clearer:
     Failure "gdk_pixbuf_get_file_info unsupported in Gtk 2.x < 2.4"
 
-How to compile:
-
-  There are two ways to compile: dune or make.
-
-  For dune, just do "dune build && dune install".
-  If you want also to build examples, do "dune build @all".
-
-  The following details the instructions for make.
-
-  You should normally not need to modify Makefiles.
-
-  In case you are using the SVN version you may have to first type
-  "aclocal && autoconf".
+## How to compile:
 
   Type
-        ./configure && make world
+```
+        dune build
+```
   to compile with all supported options enabled (libgl,
   libgnomecanvas, librsvg, native compilation, thread support).
 
-  You may use "./configure --help" to check for the different
-  configuration options.
-
-  Lablgtk3 specific options are:
-
-        --with-libdir=/path: install libs in /path/lablgtk3
-                             and /path/stublibs
-        --with-gtkspell --without-gtkspell:
-                override autodetected gtkspell support
-        --with-gtksourceview3 --without-gtksourceview3:
-                override autodetected gtksourceview3 support
-        --enable-debug: enable debug mode
-
-  Type "make install" to install using findlib.
-  The commands lablgtk3, gdk_pixbuf_mlsource3, and lablgladecc3,
-  are copied directly to the configured executable directory.
-
-  The following findlib packages are provided (according to configuration):
-
+  You can build individual packages using
+```
+        dune build $package.install
+```
+  The following packages are provided:
+```
         lablgtk3
-        lablgtk3.auto-init
-        lablgtk3.gtkspell
-        lablgtk3.sourceview3
-
-  You can alternatively use "make old-install" or
-  "make old-install DESTDIR=/my/prefix" to use the old
-  installation procedure, which does not rely on findlib.
-  By default, the library is installed at +lablgtk3.
-  All installation paths are prefixed by DESTDIR when given.
+        lablgtk3-sourceview3
+```
+  Use `dune install` or `opam pin .` to install the packages.
 
 Contents:
-
+```
         gdk.ml          low-level interface to the General Drawing Kit
         gtk.ml          low-level interface to the GIMP Tool Kit
         gtkThread.ml    main loop for threaded version
@@ -95,30 +67,16 @@ Contents:
 
         applications/browser    an ongoing port of ocamlbrowser
         applications/camlirc    an IRC client (by Nobuaki Yoshida)
-
-How to run the examples:
-  In the examples directory just type:
-        lablgtk3 ???.ml
-
-  If you want to run them before installing lablgtk3 you have to use -localdir:
-        ../src/lablgtk3 -localdir ???.ml
-
-How to link them:
-  The lablgtk3 script loads an extra module GtkInit, whose only contents is:
-        let locale = GtkMain.Main.init ()
-  You must either add this line, or add this module to your link, before
-  calling any Gtk function. With ocamlfind, use
-        ocamlfind ocamlc -package lablgtk3.auto-init -linkpkg -w s ???.ml -o ???
-  Otherwise, use something similar to:
-        ocamlc -I +lablgtk3 -w s lablgtk.cma gtkInit.cmo ???.ml -o ???
-
+```
 How to use the threaded toplevel:
 
-        % lablgtk3 -thread
-                Objective Caml version 4.07.1
+```
+% dune utop src
 
-        # let w = GWindow.window ~show:true ();;
-        # let b = GButton.button ~packing:w#add ~label:"Hello!" ();;
+# GtkMain.Main.init ();;
+# let w = GWindow.window ~show:true ();;
+# let b = GButton.button ~packing:w#add ~label:"Hello!" ();;
+```
 
   You should at once see a window appear, and then a button.
   The GTK main loop is running in a separate thread. Any command
