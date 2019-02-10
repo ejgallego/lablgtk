@@ -67,6 +67,7 @@ type region
 
 val length : region -> int
 (** the length of the region *)
+
 val get_addr : region -> nativeint
 (** the start address of the region *)
 
@@ -79,6 +80,7 @@ val blit : src:region -> dst:region -> unit
 
 val region_of_bytes : bytes -> region
 (** create a region sharing a string *)
+
 val bytes_of_region : region -> bytes
 (** copy the contents of the region to a string *)
 

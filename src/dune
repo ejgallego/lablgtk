@@ -44,7 +44,6 @@
  (public_name lablgladecc3)
  (package lablgtk3)
  (modules xml_lexer lablgladecc)
- (flags :standard -w -3-6-27)
  (libraries lablgtk3))
 
 (ocamllex xml_lexer)
@@ -68,7 +67,7 @@
 (library
  (name lablgtk3)
  (public_name lablgtk3)
- (flags :standard -w -6-7-9-10-27-32-33-34-35-36-50 -no-strict-sequence -alias-deps)
+ (flags :standard -w -6-7-10-27-33 -no-strict-sequence -alias-deps)
  (wrapped false)
  (modules
    ; gtkBrokenProps ogtkBrokenProps gtkBroken gBroken
@@ -133,7 +132,7 @@
 (library
  (name lablgtk3_sourceview3)
  (public_name lablgtk3-sourceview3)
- (flags :standard -w -6-7-27-32-33-34-36)
+ (flags :standard -w -6-7-33)
  (wrapped false)
  (modules_without_implementation
    gtkSourceView3_types)
