@@ -19,29 +19,43 @@ env:
   - BASE_OPAM="camlp4 dune cairo2"
 
   # Main test suite, some examples don't work in 4.05.0
-  matrix:
-  - TEST_TARGET="build"       COMPILER="4.05.0"
-  - TEST_TARGET="build-all"   COMPILER="4.06.1"
-  - TEST_TARGET="build-all"   COMPILER="4.07.1"
-  - TEST_TARGET="opam"        COMPILER="4.07.1"
+  # matrix:
+  # - TEST_TARGET="build"       COMPILER="4.05.0"
+  # - TEST_TARGET="build-all"   COMPILER="4.06.1"
+  # - TEST_TARGET="build-all"   COMPILER="4.07.1"
+  # - TEST_TARGET="opam"        COMPILER="4.07.1"
 
 matrix:
   include:
-    - os: osx
-      cache:
-        ccache: true
-        directories:
-          - $HOME/.opam
-          - $HOME/Library/Caches/Homebrew
-      before_cache:
-        - brew cleanup
+    # - os: osx
+    #   cache:
+    #     ccache: true
+    #     directories:
+    #       - $HOME/.opam
+    #       - $HOME/Library/Caches/Homebrew
+    #   before_cache:
+    #     - brew cleanup
+    #   before_install: |
+    #     set -e
+    #     brew update
+    #     brew install ccache opam pkg-config gtk+3 gtksourceview3 gtkspell3
+    - os: windows
       before_install: |
-        set -e
-        brew update
-        brew install ccache opam pkg-config gtk+3 gtksourceview3 gtkspell3
+        choco install mingw-get
+        ls -l /
+        ls -l c:\\tools\\MinGW
+        mingw-get update
+        mingw-get install m4 xz
+        export OPAM_VARIANT=ocaml-variants.4.07.1+mingw64c
+        curl -sL https://github.com/fdopen/opam-repository-mingw/releases/download/0.0.0.2/opam64.tar.xz -o opam64.tar.xz
+        tar -xf opam64.tar.xz
+        bash opam64/install.sh
+        opam init default -a -y "https://github.com/fdopen/opam-repository-mingw.git#opam2" -c $OPAM_VARIANT --disable-sandboxing
+        eval "$(opam env)"
+        opam install dune
 
 before_install: |
-  sudo curl -sL https://github.com/ocaml/opam/releases/download/2.0.1/opam-2.0.1-x86_64-linux -o /usr/bin/opam
+  sudo curl -sL https://github.com/ocaml/opam/releases/download/2.0.e/opam-2.0.e-x86_64-linux -o /usr/bin/opam
   sudo chmod 755 /usr/bin/opam
 
 install: |
