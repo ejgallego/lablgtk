@@ -7,9 +7,9 @@ maintainer: "garrigue@math.nagoya-u.ac.jp"
 authors: ["Jacques Garrigue et al., Nagoya University"]
 homepage: "http://lablgtk.forge.ocamlcore.org/"
 bug-reports: "https://github.com/garrigue/lablgtk/issues"
-dev-repo: "git+https://github.com/garrigue/lablgtk.git"
+dev-repo: "git+https://github.com/ejgallego/lablgtk.git"
+doc: "https://ejgallego.github.io/lablgtk/lablgtk/"
 license: "LGPL with linking exception"
-doc: "https://garrigue.github.io/lablgtk/lablgtk"
 
 depends: [
   "ocaml"     {         >= "4.05.0" }
