@@ -17,7 +17,7 @@ license: "LGPL with linking exception"
 
 depends: [
   "ocaml"                {         >= "4.05.0"    }
-  "dune"                 { build & >= "1.4.0"     }
+  "dune"                 { build & >= "1.7.2"     }
   "lablgtk3"             {         >= "3.0.beta4" }
   "conf-gtksourceview3"  { build & >= "0"         }
 ]

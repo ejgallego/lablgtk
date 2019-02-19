@@ -26,15 +26,20 @@ let platform_subst p ~package =
   | _ ->
     package, []
 
-let query_pkg p ~package =
-  Option.require ~message:(package ^ " not found") C.Pkg_config.(query p ~package)
+(* portable pkg-config handling in Configurator V1 requires some
+   special casing w.r.t. version *)
+let query_pkg p ~package ~version =
+  match version with
+  | None ->
+    Option.require ~message:(package ^ " not found") C.Pkg_config.(query p ~package)
+  | Some version ->
+    let expr = Format.sprintf "%s >= %s" package version in
+    Option.require ~message:(package ^ " not found") C.Pkg_config.(query_expr p ~package ~expr)
 
 let gen_pkg p ~package ~version =
   let file kind = kind ^ "-" ^ package ^ ".sexp" in
   let package, extra_flags = platform_subst p ~package in
-  let package =
-    Option.cata ~f:(fun version -> Format.sprintf "%s >= %s" package version) package version in
-  let c_g = query_pkg p ~package in
+  let c_g = query_pkg p ~package ~version in
   C.Flags.write_sexp (file "cflag") @@ c_g.C.Pkg_config.cflags @ extra_flags;
   C.Flags.write_sexp (file "clink") c_g.C.Pkg_config.libs
 
