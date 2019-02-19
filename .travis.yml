@@ -49,6 +49,7 @@ install: |
   opam switch set "$COMPILER"
   eval $(opam env)
   opam install $BASE_OPAM
+  opam pin add dune https://github.com/rgrinberg/jbuilder.git#show-quoting-issue-osx
   opam list
 
 script:
