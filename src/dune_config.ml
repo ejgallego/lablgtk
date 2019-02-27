@@ -2,7 +2,7 @@ module C = Configurator.V1
 
 (* XXX: Use `die` *)
 let error str =
-  Format.eprintf "configure error: %s.@\n%!" str;
+  Format.eprintf "configure error: %s@\n%!" str;
   exit 1
 
 module Option = struct
@@ -13,6 +13,13 @@ module Option = struct
   let cata ~f d = function
     | None -> d
     | Some x -> f x
+end
+
+module Either = struct
+  open Stdune
+  let require = function
+    | Either.Right v  -> v
+    | Either.Left msg -> error msg
 end
 
 (* This is a hack to detect gtk+-quartz *)
@@ -26,15 +33,15 @@ let platform_subst p ~package =
   | _ ->
     package, []
 
-let query_pkg p ~package =
-  Option.require ~message:(package ^ " not found") C.Pkg_config.(query p ~package)
+let query_pkg p ~package ~expr =
+  Either.require C.Pkg_config.(query_expr p ~package ~expr)
 
 let gen_pkg p ~package ~version =
   let file kind = kind ^ "-" ^ package ^ ".sexp" in
   let package, extra_flags = platform_subst p ~package in
-  let package =
+  let expr =
     Option.cata ~f:(fun version -> Format.sprintf "%s >= %s" package version) package version in
-  let c_g = query_pkg p ~package in
+  let c_g = query_pkg p ~package ~expr in
   C.Flags.write_sexp (file "cflag") @@ c_g.C.Pkg_config.cflags @ extra_flags;
   C.Flags.write_sexp (file "clink") c_g.C.Pkg_config.libs
 
